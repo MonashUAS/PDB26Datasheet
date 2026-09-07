@@ -53,12 +53,12 @@
 \begin{figure}
 \begin{minipage}{0.47\textwidth}
 
-\section{Overview}
-    \begin{itemize}
-        \item aaa
+\section{Description}
+The power distribution board (PDB) is a multi-board device that takes the raw power from LiPo batteries and distributes it to the various peripherals on the aircraft. The goal of Avionics PDB 2026 is to create a versatile PDB that can power the essential avionics and various projects on a fixed-wing aircraft. 
+\\
+The board is designed to be able to take in both a 12S and 4S input to eliminate the need for a dedicated avionics battery. There are various subcircuits on each board which are detailed in this document. This document serves to explain the overall design process of the PDB, covering requirements, schematic design, layout design and any iterations on circuits.
 
-    \end{itemize}
-
+ 
 
 \end{minipage}
 \hfill
@@ -69,20 +69,39 @@
 \end{minipage}
 \end{figure}
 
+\section{Features}
 
-\section{Description}
 \begin{itemize}
-    
-\item  aaa
+    \item Wide Input voltage range: 16.8 V to 50.4 V
+    \item Safety factor of 1.25
+    \item Harmonic filtering  with Overvoltage protection
+    \item Current and voltage monitor 
 \end{itemize}
-\newpage
-\section{Technical specification}
+\section{Applications}
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\item[--] Fixed wing UAV    
+\item[--]Flight controller and companion-computer supply
+\item[--] Control-surface servo power
+\item[--] Payload, video and datalink power 
+\item[--] Vision camera
+\item[--] Battery current and voltage telemetry
+\end{itemize}
+
+\centering
+\includegraphics[width=0.7\textwidth]{image.png}
+\textbf{Simplified schematic}
+
+
+\section{Recommended Operating Conditions}
 \centering
 \begin{tabular}{lcr}
 \toprule
  & Unit & Value \\
 \midrule
-Input voltage& $V$ & 16.8/50.4\\
+Input voltage& $V$ & 16.8-50.4\\
 & & \\
 & & \\
 & & \\
