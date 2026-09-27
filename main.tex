@@ -1,22 +1,31 @@
-
-\documentclass[a4paper,12pt,oneside,pdflatex,italian,final,twocolumn]{article}
-
-
+\documentclass[a4paper,12pt,oneside,final]{article}
 
 \usepackage[utf8]{inputenc}
-\usepackage{parallel}
+\usepackage[T1]{fontenc}
+\usepackage{libertine}
+\renewcommand*\familydefault{\sfdefault}
+
+\usepackage{graphicx}
+\usepackage{grffile}
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multicol}
 \usepackage{fancyhdr}
-\usepackage[export]{adjustbox}
+\usepackage{pdfpages}
+\usepackage{caption}
 \usepackage[margin=0.5in]{geometry}
 \addtolength{\topmargin}{1.5mm}
 
-
-\usepackage{libertine}
-\renewcommand*\familydefault{\sfdefault}  %% Only if the base font of the document is to be sans serif
-\usepackage[T1]{fontenc}
-
+%% Insert one page of the schematic PDF as a numbered figure with a caption
+%% underneath. [#1] = optional heading at the top of the page,
+%% #2 = page number, #3 = caption, #4 = label for \ref
+\newcommand{\schematicpage}[4][]{%
+  \includepdf[pages=#2, fitpaper, scale=0.88,
+    picturecommand*={%
+      \put(50,558){\parbox[b]{0.88\paperwidth}{#1}}%
+      \put(50,10){\parbox[b]{0.88\paperwidth}{%
+        \captionof{figure}{#3}\label{#4}}}}]{Zeus_PDB_2026_V2.pdf}}
 
 \title{"ZEUS" PDB26 Datasheet}
 \author{PDB Avionics}
@@ -25,134 +34,169 @@
 \begin{document}
 
 \pagestyle{fancy}
-
 \renewcommand{\headrulewidth}{1pt}
 \renewcommand{\footrulewidth}{1pt}
-\renewcommand{\headruleskip}{8pt}
-\renewcommand{\footruleskip}{6pt}
+\setlength{\headsep}{20pt}
 
 \lhead{MUAS Engineering}
-\chead {\today}
+\chead{\today}
 \rhead{"ZEUS" PDB V1}
 
-\onecolumn
+%% ================= PAGE 1 =================
 
-\begin{figure}
-\begin{minipage}{0.47\textwidth}
-\centering
-\includegraphics[width=.7\textwidth,left,]{HIGH RES Black Logo + Clear Background (1).png}
-
+%% ---------- Title banner ----------
+\noindent
+\begin{minipage}[c]{0.47\textwidth}
+  \includegraphics[width=0.7\linewidth]{"HIGH RES Black Logo + Clear Background (1)".png}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.47\textwidth}
+  \raggedleft
+  {\Huge\textbf{"ZEUS" PDB V1}}
 \end{minipage}
-\hfill
-\begin{minipage}{0.47\textwidth}
-\raggedleft
-\Huge \textbf{"ZEUS" PDB V1}
-\end{minipage}
-\end{figure}
 
-\begin{figure}
-\begin{minipage}{0.47\textwidth}
+\vspace{1.5em}
 
-\section{Description}
-The power distribution board (PDB) is a multi-board device that takes the raw power from LiPo batteries and distributes it to the various peripherals on the aircraft. The goal of Avionics PDB 2026 is to create a versatile PDB that can power the essential avionics and various projects on a fixed-wing aircraft. 
-\\
-The board is designed to be able to take in both a 12S and 4S input to eliminate the need for a dedicated avionics battery. There are various subcircuits on each board which are detailed in this document. This document serves to explain the overall design process of the PDB, covering requirements, schematic design, layout design and any iterations on circuits.
-
- 
-
-\end{minipage}
-\hfill
-\begin{minipage}{0.47\textwidth}
-\centering
-\includegraphics[width=0.7\textwidth,right]{pdb_board.jpg}
-
-\end{minipage}
-\end{figure}
-
-\section{Features}
-
-\begin{itemize}
-    \item Wide Input voltage range: 16.8 V to 50.4 V
+%% ---------- Left: Features + Applications | Right: photo + Description ----------
+\noindent
+\begin{minipage}[t]{0.44\textwidth}
+  \vspace{0pt}
+  \section{Features}
+  \begin{itemize}[label=--, itemsep=6pt, topsep=4pt, parsep=0pt, leftmargin=*]
+    \item Wide input voltage range: \SI{16.8}{\volt} to \SI{50.4}{\volt}
     \item Safety factor of 1.25
-    \item Harmonic filtering  with Overvoltage protection
-    \item Current and voltage monitor 
-\end{itemize}
-\section{Applications}
-\begin{itemize}
-\setlength{\itemsep}{0pt}
-\setlength{\parskip}{0pt}
-\setlength{\parsep}{0pt}
-\item[--] Fixed wing UAV    
-\item[--]Flight controller and companion-computer supply
-\item[--] Control-surface servo power
-\item[--] Payload, video and datalink power 
-\item[--] Vision camera
-\item[--] Battery current and voltage telemetry
-\end{itemize}
+    \item Harmonic filtering with overvoltage protection
+    \item Current and voltage monitor
+    \item 12S and 4S input support
+    \item No dedicated avionics battery required
+    \item Onboard telemetry output
+  \end{itemize}
 
-\centering
-\includegraphics[width=0.7\textwidth]{image.png}
-\textbf{Simplified schematic}
+  \section{Applications}
+  \begin{itemize}[label=--, itemsep=6pt, topsep=4pt, parsep=0pt, leftmargin=*]
+    \item Fixed wing UAV
+    \item Flight controller supply
+    \item Control-surface servo power
+    \item Payload, video and datalink
+    \item Vision camera
+    \item Current and voltage telemetry
+  \end{itemize}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.52\textwidth}
+  \vspace{0pt}
+  \vspace{3.5ex}% tweak this to line the photo up with the "Features" heading
+  \centering
+  \includegraphics[width=\linewidth]{pdb_board.png}
 
+  \vspace{1em}
+  \raggedright
+  \section{Description}
+  The power distribution board (PDB) is a multi-board device that takes the
+  raw power from LiPo batteries and distributes it to the various peripherals
+  on the aircraft. The goal of Avionics PDB 2026 is to create a versatile PDB
+  that can power the essential avionics and various projects on a fixed-wing
+  aircraft.
 
-\section{Recommended Operating Conditions}
-\centering
-\begin{tabular}{lcr}
-\toprule
- & Unit & Value \\
-\midrule
-Input voltage& $V$ & 16.8-50.4\\
-& & \\
-& & \\
-& & \\
-& & \\
-& & \\
-& & \\
-\bottomrule
-\end{tabular}
+  \vspace{0.5em}
+  The board is designed to be able to take in both a 12S and 4S input to
+  eliminate the need for a dedicated avionics battery. There are various
+  subcircuits on each board which are detailed in this document. This document
+  serves to explain the overall design process of the PDB, covering
+  requirements, schematic design, layout design and any iterations on circuits.
+\end{minipage}
 
-\raggedright
+%% ---------- Full width underneath ----------
+\par\vspace{0.5em}
+\section{Typical Application}
+\par
+\newlength{\spaceleft}
+\setlength{\spaceleft}{\dimexpr\pagegoal-\pagetotal-2\baselineskip\relax}
+\begin{center}
+  \includegraphics[width=0.6\textwidth, height=\spaceleft,
+                   keepaspectratio]{image.png}
+\end{center}
+\clearpage
+
+%% ================= PAGE 2 ONWARDS =================
+
+\section{Technical Specifications}
+\begin{center}
+  \begin{tabular}{lcr}
+    \toprule
+                   & Unit & Value \\
+    \midrule
+    Input voltage  & V    & 16.8--50.4 \\
+    Maximum continuous current  &   A   & 0.05--10.56 \\
+    Maximum power usage  &  W    &  112.66W\\ 
+     Output voltages  &   V   & 12V, 8V, 7V, 5V and 3.3V \\ 
+    \bottomrule
+  \end{tabular}
+  \begin{tabular}{llcr}
+    \toprule
+    Regulator & Name & IC &  Max Current \\
+    \midrule
+       A & 12V OUT 1  & LM70880-Q1 &8A \\
+       B & 12V OUT 2  & LM70880-Q1   & 8A \\
+       C & 5V RDNT  & LMR36520FADDAR &  2.5A\\ 
+       D & 8V (Servo Right)  &  TPS56837  & 8A \\ 
+       E & 8V (Servo Left) & TPS56837& 8A \\
+       F & 7V & LMR51450 & 5A\\
+       G & 5V & LMR51450 & 5A\\
+       H & 3.3V & TPS7A20  & 0.5A\\
+    \bottomrule
+  \end{tabular}
+\end{center}
 
 \section{Pinout}
+\begin{center}
+  \begin{tabular}{lllc}
+    \toprule
+    Pin & Signal & Connector Type & Recommended Max Current Draw\\
+    \midrule
+    1 & VBUS & Bus Bar (Input)& N/A\\ 
+    2 & VIN & XT60 (Input)& N/A\\
+    3 & 5V RDNT & 6 Pin Clickmate 2.00 MM & 1.510A\\
+    4 & 12V & 6 Pin Clickmate 2.00 MM & 12.750A\\
+    5 & 8V (Servo Right) & 6 Pin Clickmate 2.00 MM & 6.250A\\
+    6 & 8V (Servo Left) & 6 Pin Clickmate 2.00 MM & 6.250A\\
+    7 & 7V & 6 Pin Clickmate 2.00 MM & 0.75A\\
+    8 & 5V (Cube) & 6 Pin Clickmate 2.00 MM & 1.215A\\
+    9 & 5V (Raspberry Pi) & 2 Pin Clickmate 2.00 MM & 2.5A\\
+    10 & 3.3V & 2 Pin Clickmate 2.00 MM & 0.125A\\
+    \bottomrule
+  \end{tabular}
+\end{center}
 
-\centering
-\begin{tabular}{lcr}
-\toprule
-  Pin & Signal \\
-\midrule
-1 &   \\
-2 &   \\
-3 &    \\
-4 &   \\
-5 &  \\
-6 &   \\ 
-\bottomrule
-\end{tabular}
-
-
-
-\raggedright
 \section{Measures}
+\par
+%% Not a float, so it stays under the heading; shrinks to fit the space left
+\setlength{\spaceleft}{\dimexpr\pagegoal-\pagetotal-4\baselineskip\relax}
+\begin{center}
+  \includegraphics[width=0.7\textwidth, height=\spaceleft,
+                   keepaspectratio]{measures.png}
+  \captionof{figure}{Measured size of PDB}
+  \label{fig:measures}
+\end{center}
+
+%% ---------- Full schematic and board layout (pages 2-10 of the Altium PDF) ----------
+\clearpage
+\schematicpage[\section{Schematics}]{2}{12V main regulator, line 1 (LM70880-Q1)}{fig:12v-main-1}
+\schematicpage{3}{5V main regulator (LMR51450)}{fig:5v-main}
+\schematicpage{4}{5V redundant regulator (LMR51450)}{fig:5v-redundant}
+\schematicpage{5}{3.3V LDO regulator (TPS7A20)}{fig:3v3-ldo}
+\schematicpage{6}{7V regulator (LMR51450)}{fig:7v}
+\schematicpage{7}{8V regulator, line 1 (TPS56837)}{fig:8v-line1}
+\schematicpage{8}{8V regulator, line 2 (TPS56837)}{fig:8v-line2}
+\schematicpage{9}{Current and voltage monitor}{fig:current-monitor}
+\schematicpage{10}{12V main regulator, line 2 (LM70880-Q1)}{fig:12v-main-2}
+
+\section {Acknowledgements}
 \centering
-\begin{figure} [h]
-\centering
-\includegraphics[width=0.7\textwidth,]{measures.png}
+Designed  and manufactured By:
+Michael Wang,
+Izaak Estandarte,
+Justin Wu,
+Dylan Ngere
 
-\end{figure}
 
-
-\begin{figure}
-\centering
-\includegraphics[width=1\textwidth,left,]{schematic.png}
-
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=1\textwidth,left,]{board.png}
-
-\end{figure}
 \end{document}
-
-
-
